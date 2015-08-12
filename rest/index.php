@@ -16,8 +16,8 @@ $app->post('/sendme/:email', function($email){
   try{
     $filename = $_FILES['file']['name'];
     $fileext= strrchr($filename, '.');
-    $filename = basename($filename, $fileext). rand(1111,9999);
-    $destination = 'tmp/'. $filename. $fileext;
+    $newfilename = basename($filename, $fileext). rand(1111,9999);
+    $destination = 'tmp/'. $newfilename. $fileext;
     move_uploaded_file($_FILES['file']['tmp_name'], $destination);
     $mail = new PHPMailer();
     $mail->isSMTP();
