@@ -119,6 +119,7 @@ input[readonly] {
         <p class="lead">SendMail is a secure and easy way to send files to your mail account without login in insecure rooms</p>
         <p><button class="btn btn-lg btn-success" role="button" ng-click="openDialog()">Send Me Now</button></p>
       </div>
+      <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
     </script>
     <script type="text/ng-template" id="dialog.html">
         <div class="modal-header">
@@ -135,12 +136,13 @@ input[readonly] {
               <div class="input-group">
                 <span class="input-group-btn">
                     <span class="btn btn-primary btn-file">
-                        Browse&hellip; <input id="file" name="file" type="file" onchange="angular.element(this).scope().fileChange(this.value)" ng-model="data.file">
+                        Browse&hellip; <input id="file" name="file" type="file" onchange="angular.element(this).scope().fileChange(this.files[0])" ng-model="data.file">
                     </span>
                 </span>
                 <input name="fileName" type="text" class="form-control" ng-model="data.fileName" required readonly>
               </div>              
-            </div>          
+            </div>
+            <span style="color:red;font-weight:bold;">{{ error }}</span>
           </div>
           <div class="modal-footer">
             <button class="btn btn-primary" type="submit" ng-click="send(data)" ng-disabled="form.email.$invalid || form.fileName.$invalid">Send</button>
@@ -180,18 +182,25 @@ input[readonly] {
         })
         .otherwise({ redirectTo: '/home' })
       }])
-      app.controller('HomeCtrl', function($scope, $modal){      
+      app.controller('HomeCtrl', function($scope, $modal){  
+        $scope.alerts = []
         $scope.openDialog = function (size) {
           var modalInstance = $modal.open({          
             templateUrl: 'dialog.html',
             controller: 'DialogCtrl',
             backdrop: 'static'
-            })              
+            })
+        .result.then(function(response){          
+          $scope.alerts.push({type: 'success', msg: 'Good! That code seems to be working fine. Look at your mailbox.'})
+        })
        }
+       $scope.closeAlert = function(index) {
+        $scope.alerts.splice(index, 1);
+        }
       })
       app.controller('DialogCtrl', function($scope, $modalInstance, $http){
         $scope.data = {
-          file: '',
+          file: undefined,
           fileName: '',
           email: ''
         }
@@ -199,11 +208,33 @@ input[readonly] {
           $modalInstance.dismiss('cancel')
         }
         $scope.send = function(data){
-          console.log(data)
+          console.log('sending data' + JSON.stringify($scope.data))
+          var formData = new FormData()
+          formData.append('file', $scope.data.file)
+          $http.post('http://dbarros.pogutils.com/sendme/rest/sendme/' + $scope.data.email,
+                 formData,
+                 {
+                    headers: {'Content-Type': undefined},
+                    transformRequest : angular.identity
+                 })
+          .success(function(data, status, headers, config){
+            console.log('success')
+            console.log(data)
+            if(data.status){
+              $modalInstance.close(true)
+            } else {
+              $scope.error = "Something got wrong: " + data.reason
+            }
+          })
+          .error(function(data, status, headers, config){
+            console.log('error')
+            console.log(data)
+          })
         }
-        $scope.fileChange = function(input){  
-          $scope.data.file = input        
-          $scope.data.fileName = input.replace(/\\/g, '/').replace(/.*\//, '')
+        $scope.fileChange = function(input){          
+          console.log(input)
+          $scope.data.file = input
+          $scope.data.fileName = input.name
           $scope.$digest()
         }
       })
