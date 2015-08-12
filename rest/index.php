@@ -28,7 +28,7 @@ $app->post('/sendme/:email', function($email){
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     $mail->From      = 'sendme@pogutils.com';
-    $mail->FromName  = 'SendMe';
+    $mail->FromName  = '';
     $mail->Subject   = 'Message Sent Via SendMe';
     $mail->Body      = 'This message was sent from SendMe website';
     $mail->AddAddress( $email );
