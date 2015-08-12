@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SendMe</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">    
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style type="text/css">
+body {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.header,
+.marketing,
+.footer {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.header {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.header h3 {
+  margin-top: 0;
+  margin-bottom: 0;
+  line-height: 40px;
+}
+.footer {
+  padding-top: 19px;
+  color: #777;
+  border-top: 1px solid #e5e5e5;
+}
+@media (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+}
+.container-narrow > hr {
+  margin: 30px 0;
+}
+.jumbotron {
+  text-align: center;
+  border-bottom: 1px solid #e5e5e5;
+}
+.jumbotron .btn {
+  padding: 14px 24px;
+  font-size: 21px;
+}
+.marketing {
+  margin: 40px 0;
+}
+.marketing p + h4 {
+  margin-top: 28px;
+}
+@media screen and (min-width: 768px) {
+  .header,
+  .marketing,
+  .footer {
+    padding-right: 0;
+    padding-left: 0;
+  }
+  .header {
+    margin-bottom: 30px;
+  }
+  .jumbotron {
+    border-bottom: 0;
+  }
+}
+.btn-file {
+  position: relative;
+  overflow: hidden;
+}
+.btn-file input[type=file] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  background: red;
+  cursor: inherit;
+  display: block;
+}
+input[readonly] {
+  background-color: white !important;
+  cursor: text !important;
+}
+    </style>
+  </head>
+  <body ng-app="SendMe">
+    <div class="container">
+      <div class="header clearfix">        
+        <nav ng-controller="NavMenuCtrl">
+          <ul class="nav nav-pills pull-right">
+            <li role="presentation" class="{{ $location.path() == '/home' ? 'active' : '' }}"><a href="#/home">Home</a></li>
+            <li role="presentation" class="{{ $location.path() == '/about' ? 'active' : '' }}"><a href="#/about">About</a></li>
+            <li role="presentation" class="{{ $location.path() == '/contact' ? 'active' : '' }}"><a href="#/contact">Contact</a></li>
+          </ul>
+        </nav>
+        <h3 class="text-muted">SendMe</h3>
+      </div>      
+      <div ng-view></div>
+      <footer class="footer">
+        <p>&copy; pogutils.com 2015</p>
+      </footer>
+    </div>
+    <script type="text/ng-template" id="home.html">
+      <div class="jumbotron">
+        <h1>Send Files Across Internet</h1>
+        <p class="lead">SendMail is a secure and easy way to send files to your mail account without login in insecure rooms</p>
+        <p><button class="btn btn-lg btn-success" role="button" ng-click="openDialog()">Send Me Now</button></p>
+      </div>
+    </script>
+    <script type="text/ng-template" id="dialog.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Upload Files!</h3>
+        </div>
+        <form name="form" novalidate>
+          <div class="modal-body">              
+            <div class="form-group">
+              <label for="email">Destination Email Address</label>
+              <input type="email" class="form-control" id="email" placeholder="Email" ng-model="data.email" required>
+              <div ng-show="form.$submitted || form.uEmail.$touched">
+                <span ng-show="form.uEmail.$error.required">Tell us your email.</span>
+                <span ng-show="form.uEmail.$error.email">This is not a valid email.</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="file">File To Send</label>              
+              <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse&hellip; <input id="file" type="file" onchange="fileChange()" ng-model="data.file">
+                    </span>
+                </span>
+                <input type="text" class="form-control" readonly>
+              </div>              
+            </div>          
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" ng-click="send(data)">Send</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+          </div>
+        </form>
+    </script>
+    <script type="text/ng-template" id="about.html">
+      <p>
+        That is about a good way to send files over internet without needs to log into your mail account. So you keep secure your login data.
+      </p>
+    </script>
+    <script type="text/ng-template" id="contact.html">
+      <p>
+        I know you have not any question about sendme, so I proudly remove any contact form :D
+      </p>
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>    
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular-route.js"></script>
+    <script src="https://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.13.3.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>    
+    <script type="text/javascript">
+      var app = angular.module('SendMe', ['ngRoute', 'ui.bootstrap'])
+      app.config(['$routeProvider', function($routeProvider){
+        $routeProvider.when('/home', {
+          templateUrl: 'home.html',
+          controller: 'HomeCtrl'
+        })
+        $routeProvider.when('/about', {
+          templateUrl: 'about.html',
+          controller: 'AboutCtrl'
+        })
+        $routeProvider.when('/contact', {
+          templateUrl: 'contact.html',
+          controller: 'ContactCtrl'
+        })
+        .otherwise({ redirectTo: '/home' })
+      }])
+      app.controller('HomeCtrl', function($scope, $modal){      
+        $scope.openDialog = function (size) {
+          var modalInstance = $modal.open({          
+            templateUrl: 'dialog.html',
+            controller: 'DialogCtrl',
+            backdrop: 'static'
+            })              
+       }
+      })
+      app.controller('DialogCtrl', function($scope, $modalInstance, $http){
+        $scope.cancel = function(){
+          $modalInstance.dismiss('cancel')
+        }
+        $scope.send = function(data){
+          $scope.master = angular.copy(data);
+        }
+      })
+      app.controller('AboutCtrl', function($scope){ })
+      app.controller('ContactCtrl', function($scope){ })
+      app.controller('NavMenuCtrl', function($scope, $location){
+        $scope.$location = $location
+      })
+      function fileChange() {
+          var input = $('#file')          
+          var label = input.val().replace(/\\/g, '/').replace(/.*\//, '')        
+          input.parents('.input-group').find(':text').val(label)
+      }
+    </script>    
+  </body>
+</html>
