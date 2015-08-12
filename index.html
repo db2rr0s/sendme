@@ -213,20 +213,17 @@ input[readonly] {
         $scope.cancel = function(){
           $modalInstance.dismiss('cancel')
         }
-        $scope.send = function(data){
-          console.log('sending data' + JSON.stringify($scope.data))
+        $scope.send = function(data){          
           $scope.isUploading = true
           var formData = new FormData()
           formData.append('file', $scope.data.file)
-          $http.post('http://dbarros.pogutils.com/sendme/rest/sendme/' + $scope.data.email,
-                 formData,
-                 {
+          $http.post('http://sendme.pogutils.com/rest/sendme/' + $scope.data.email,
+                 formData, {
                     headers: {'Content-Type': undefined},
                     transformRequest : angular.identity
                  })
           .success(function(data, status, headers, config){
-            console.log('success')
-            console.log(data)
+            console.log('success')            
             if(data.status){
               $modalInstance.close(true)
             } else {
@@ -234,12 +231,12 @@ input[readonly] {
             }
           })
           .error(function(data, status, headers, config){
+            $scope.isUploading = false
             console.log('error')
-            console.log(data)
+            $scope.error ="BUFU!!! Oh shit! I couldn't send your file :("
           })
         }
         $scope.fileChange = function(input){          
-          console.log(input)
           $scope.data.file = input
           $scope.data.fileName = input.name
           $scope.$digest()
