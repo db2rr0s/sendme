@@ -128,26 +128,22 @@ input[readonly] {
           <div class="modal-body">              
             <div class="form-group">
               <label for="email">Destination Email Address</label>
-              <input type="email" class="form-control" id="email" placeholder="Email" ng-model="data.email" required>
-              <div ng-show="form.$submitted || form.uEmail.$touched">
-                <span ng-show="form.uEmail.$error.required">Tell us your email.</span>
-                <span ng-show="form.uEmail.$error.email">This is not a valid email.</span>
-              </div>
+              <input type="email" class="form-control" name="email" placeholder="Email" ng-model="data.email" required>              
             </div>
             <div class="form-group">
               <label for="file">File To Send</label>              
               <div class="input-group">
                 <span class="input-group-btn">
                     <span class="btn btn-primary btn-file">
-                        Browse&hellip; <input id="file" type="file" onchange="fileChange()" ng-model="data.file">
+                        Browse&hellip; <input id="file" name="file" type="file" onchange="angular.element(this).scope().fileChange(this.value)" ng-model="data.file">
                     </span>
                 </span>
-                <input type="text" class="form-control" readonly>
+                <input name="fileName" type="text" class="form-control" ng-model="data.fileName" required readonly>
               </div>              
             </div>          
           </div>
           <div class="modal-footer">
-            <button class="btn btn-primary" type="submit" ng-click="send(data)">Send</button>
+            <button class="btn btn-primary" type="submit" ng-click="send(data)" ng-disabled="form.email.$invalid || form.fileName.$invalid">Send</button>
             <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
           </div>
         </form>
@@ -194,23 +190,28 @@ input[readonly] {
        }
       })
       app.controller('DialogCtrl', function($scope, $modalInstance, $http){
+        $scope.data = {
+          file: '',
+          fileName: '',
+          email: ''
+        }
         $scope.cancel = function(){
           $modalInstance.dismiss('cancel')
         }
         $scope.send = function(data){
-          $scope.master = angular.copy(data);
+          console.log(data)
+        }
+        $scope.fileChange = function(input){  
+          $scope.data.file = input        
+          $scope.data.fileName = input.replace(/\\/g, '/').replace(/.*\//, '')
+          $scope.$digest()
         }
       })
       app.controller('AboutCtrl', function($scope){ })
       app.controller('ContactCtrl', function($scope){ })
       app.controller('NavMenuCtrl', function($scope, $location){
         $scope.$location = $location
-      })
-      function fileChange() {
-          var input = $('#file')          
-          var label = input.val().replace(/\\/g, '/').replace(/.*\//, '')        
-          input.parents('.input-group').find(':text').val(label)
-      }
+      })     
     </script>    
   </body>
 </html>
