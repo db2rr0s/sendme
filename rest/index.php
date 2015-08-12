@@ -24,13 +24,13 @@ $app->post('/sendme/:email', function($email){
     $mail->Host = 'mx1.hostinger.com.br';
     $mail->SMTPAuth = true;
     $mail->Username = 'sendme@pogutils.com';
-    $mail->Password = 'sendme';
+    $mail->Password = '';
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     $mail->From      = 'sendme@pogutils.com';
-    $mail->FromName  = '';
+    $mail->FromName  = 'SendMe';
     $mail->Subject   = 'Message Sent Via SendMe';
-    $mail->Body      = 'This message was sent from SendMe website';
+    $mail->Body      = 'Hi, your file sent by SendMe is served';
     $mail->AddAddress( $email );
     $mail->AddAttachment( $destination, $filename );
     $sendRet = $mail->Send();
