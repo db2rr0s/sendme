@@ -217,7 +217,7 @@ input[readonly] {
           $scope.isUploading = true
           var formData = new FormData()
           formData.append('file', $scope.data.file)
-          $http.post('http://sendme.pogutils.com/rest/sendme/' + $scope.data.email,
+          $http.post('http://pogutils.com/rest/sendme/' + $scope.data.email,
                  formData, {
                     headers: {'Content-Type': undefined},
                     transformRequest : angular.identity
