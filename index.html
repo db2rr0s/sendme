@@ -120,7 +120,7 @@ input[readonly] {
       </div>      
       <div ng-view></div>
       <footer class="footer">
-        <p>&copy; pogutils.com 2015</p>
+        <p>&copy; nocoffeenocode.com 2015</p>
       </footer>
     </div>
     <script type="text/ng-template" id="home.html">
@@ -226,7 +226,7 @@ input[readonly] {
           $scope.isUploading = true
           var formData = new FormData()
           formData.append('file', $scope.data.file)
-          $http.post('http://pogutils.com/rest/sendme/' + $scope.data.email,
+          $http.post('http://vps.nocoffeenocode.com/sendme-rest/sendme/' + $scope.data.email,
                  formData, {
                     headers: {'Content-Type': undefined},
                     transformRequest : angular.identity
