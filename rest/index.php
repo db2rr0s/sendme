@@ -9,7 +9,7 @@ $app = new \Slim\Slim(array(
  'cookies.encrypt' => true,
 ));
 $app->contentType('application/json');
-$app->get('/sendme', function(){
+$app->get('/', function(){
   echo json_encode(array('test' => true));
 });
 $app->post('/sendme/:email', function($email){
@@ -23,11 +23,11 @@ $app->post('/sendme/:email', function($email){
     $mail->isSMTP();
     $mail->Host = 'mx1.hostinger.com.br';
     $mail->SMTPAuth = true;
-    $mail->Username = 'sendme@pogutils.com';
+    $mail->Username = 'sendme@nocoffeenocode.com';
     $mail->Password = '';
     $mail->SMTPSecure = 'tls';
     $mail->Port = 587;
-    $mail->From      = 'sendme@pogutils.com';
+    $mail->From      = 'sendme@nocoffeenocode.com';
     $mail->FromName  = 'SendMe';
     $mail->Subject   = 'Message Sent Via SendMe';
     $mail->Body      = 'Hi, your file sent by SendMe is served';
