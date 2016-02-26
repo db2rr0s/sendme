@@ -21,11 +21,11 @@ $app->post('/sendme/:email', function($email){
     move_uploaded_file($_FILES['file']['tmp_name'], $destination);
     $mail = new PHPMailer();
     $mail->isSMTP();
-    $mail->Host = 'mx1.hostinger.com.br';
-    $mail->SMTPAuth = true;
+    $mail->Host = 'nocoffeenocode.com';
+    $mail->SMTPAuth = false;
     $mail->Username = 'sendme@nocoffeenocode.com';
-    $mail->Password = '';
-    $mail->SMTPSecure = 'tls';
+    $mail->Password = 'S3ndme$';
+    //$mail->SMTPSecure = 'tls';
     $mail->Port = 587;
     $mail->From      = 'sendme@nocoffeenocode.com';
     $mail->FromName  = 'SendMe';
@@ -34,8 +34,11 @@ $app->post('/sendme/:email', function($email){
     $mail->AddAddress( $email );
     $mail->AddAttachment( $destination, $filename );
     $sendRet = $mail->Send();
-    unlink($destination);
-    echo json_encode(array('status' => true, 'file' => $destination, 'sendRet' => $sendRet));
+	unlink($destination);
+	if($sendRet)
+		echo json_encode(array('status' => true, 'file' => $destination));
+	else
+		echo json_encode(array('status' => false, 'reason' => $mail->ErrorInfo));
   }catch(Exception $ex){
     echo json_encode(array('status' => false, 'reason' => $ex->getMessage()));
   }

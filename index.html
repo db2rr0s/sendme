@@ -232,7 +232,6 @@ input[readonly] {
                     transformRequest : angular.identity
                  })
           .success(function(data, status, headers, config){
-            console.log('success')            
             if(data.status){
               $modalInstance.close(true)
             } else {
@@ -241,7 +240,6 @@ input[readonly] {
           })
           .error(function(data, status, headers, config){
             $scope.isUploading = false
-            console.log('error')
             $scope.error ="BUFU!!! Oh shit! I couldn't send your file :("
           })
         }
